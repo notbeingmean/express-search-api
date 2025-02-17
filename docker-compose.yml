@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      args:
+        - PORT=${PORT}
+        - MONGO_URI=${MONGO_URI}
+        - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:4200}
+    ports:
+      - "3000:3000"
+    env_file: .env
+    environment:
+      - PORT=${PORT}
+      - MONGO_URI=${MONGO_URI}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:4200}
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
