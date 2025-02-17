@@ -1,0 +1,9 @@
+node_modules
+.git
+.angular
+.editorconfig
+*.md
+.gitignore
+*.log
+coverage
+karma.conf.js
