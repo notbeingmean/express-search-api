@@ -1,6 +1,5 @@
 FROM oven/bun:1
 
-# Define build arguments
 ARG PORT
 ARG MONGO_URI
 ARG CORS_ORIGIN
@@ -12,7 +11,6 @@ RUN bun install
 
 COPY . .
 
-# Convert build args to environment variables
 ENV PORT=${PORT:-3000}
 ENV MONGO_URI=${MONGO_URI}
 ENV CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:4200}
