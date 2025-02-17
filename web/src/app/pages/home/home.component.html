@@ -1,0 +1,25 @@
+<h1 class="text-3xl text-red-500 text-center my-4">หนังสือสุดเท่</h1>
+<div
+  class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-items-center gap-4"
+>
+  <div *ngFor="let product of obj.data">
+    <app-product-card [product]="product" />
+  </div>
+  <div>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="obj.pagination.currentPage === 1 || this.page === 1"
+      (click)="prevPage()"
+    >
+      Prev
+    </button>
+    <div class="inline-block"></div>
+    <button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+      [disabled]="obj.pagination.currentPage === obj.pagination.totalPages"
+      (click)="nextPage()"
+    >
+      Next
+    </button>
+  </div>
+</div>

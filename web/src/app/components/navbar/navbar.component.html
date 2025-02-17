@@ -1,0 +1,10 @@
+<nav class="flex items-center justify-between p-4">
+  <a href="#" class="">Myorder</a>
+  <ul class="flex items-center justify-between">
+    <li *ngFor="let item of listLinks" class="mx-2">
+      <a [href]="item.link" class="text-blue-500 hover:text-blue-800">
+        {{ item.name }}
+      </a>
+    </li>
+  </ul>
+</nav>
