@@ -17,8 +17,8 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 justify-items-center gap-4"
   >
-    <div *ngFor="let item of obj.data">
-      <app-product-search-card [product]="item" [search]="this.search" />
+    <div *ngFor="let book of books.data">
+      <app-book-card [book]="book" [search]="search" />
     </div>
   </div>
 </div>

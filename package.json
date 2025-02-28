@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"bun --watch src/index.ts\" \"cd web && bun start\"",
     "start": "bun src/index.ts",
-    "db:seed": "bun scripts/db/index.ts"
+    "db:seed": "bun scripts/db/index.ts",
+    "test": "bun test"
   },
   "devDependencies": {
     "@types/bun": "latest",

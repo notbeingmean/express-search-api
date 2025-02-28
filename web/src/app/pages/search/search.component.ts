@@ -1,27 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Data } from '../../types/product';
-import { ProductSearchCardComponent } from '../../components/product-search-card/product-search-card.component';
+import { BookResponse } from '../../types/book';
+import { BookCardComponent } from '../../components/book-card/book-card.component';
+import { BookService } from '../../services/book.service';
 import { NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   standalone: true,
   selector: 'app-search',
-  imports: [ProductSearchCardComponent, NgFor, FormsModule],
+  imports: [BookCardComponent, NgFor, FormsModule], // Removed duplicate NgForOf
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })
-export class SearchComponent implements OnInit {
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+export class SearchComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
 
-  private apiUrl = 'http://localhost:3000/api';
-  obj: Data = {
+  books: BookResponse = {
     data: [],
     pagination: {
       currentPage: 0,
@@ -34,31 +30,39 @@ export class SearchComponent implements OnInit {
   search = '';
   page = 1;
 
-  ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.page = params['page'] || 1;
-      this.search = params['q'] || '';
-    });
+  constructor(
+    private bookService: BookService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
-    this.getProducts();
-    console.log(this.obj);
-  }
-
-  getProducts() {
-    return this.http
-      .get<Data>(
-        `${this.apiUrl}/books/search?page=${this.page}&q=${this.search}`
-      )
-      .subscribe((data) => {
-        this.obj = data;
+  ngOnInit(): void {
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ page = 1, q = '' }) => {
+        this.page = Number(page);
+        this.search = q;
+        this.getProducts();
       });
   }
 
-  onSearch() {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  getProducts(): void {
+    this.bookService
+      .searchBooks(this.page, this.search)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.books = data;
+      });
+  }
+
+  onSearch(): void {
     this.router.navigate(['search'], {
-      queryParams: { q: this.search },
-      queryParamsHandling: 'merge',
+      queryParams: { q: this.search, page: 1 },
     });
-    this.getProducts();
   }
 }
